@@ -1,6 +1,8 @@
+import axios from 'axios';
 import { NextFunction, Request, Response, Router } from 'express';
 import { AsyncHandler } from '../../utils';
 import { IController } from '../../utils/interfaces';
+import { ICrypto, ICryptoData } from './interfaces';
 
 export class CryptoController implements IController {
   public path = '/cryptos';
@@ -41,11 +43,15 @@ export class CryptoController implements IController {
     response: Response,
     next: NextFunction
   ): Promise<void> => {
-    try {
-      response.status(200).send('cryptos incoming');
-    } catch (error: any) {
-      next(error);
-    }
+    const MESSARI_API_URL =
+      'https://data.messari.io/api/v1/assets?fields=id,slug,symbol,metrics/market_data/price_usd';
+
+    const { data } = await axios.get<ICryptoData>(MESSARI_API_URL);
+    data.data.map((crypto) => {
+      console.log(crypto);
+    });
+
+    response.status(200).send({ cryptos: data.data });
   };
 
   //   get single crypto information

@@ -3,3 +3,7 @@ export interface ICrypto {
   slug: string;
   symbol: string;
 }
+
+export interface ICryptoData {
+  data: ICrypto[];
+}

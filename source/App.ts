@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import http from 'http';
 import { IController } from './utils/interfaces/';
+import { ErrorHandler } from './middlewares';
 
 export default class Application {
   private expressApp: express.Application;
@@ -16,6 +17,8 @@ export default class Application {
     this.initialiseAppMiddlewares();
     this.initialiseDatabaseConnection();
     this.initialiseControllers();
+
+    this.initialiseErrorHandling();
   }
 
   public startListening = (): http.Server => {
@@ -37,12 +40,16 @@ export default class Application {
       .then(() => {
         console.log('database connected');
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => console.log(error));
   };
 
   private initialiseControllers = () => {
     this.controllers?.forEach((controller) => {
       this.expressApp.use('/', controller.router);
     });
+  };
+
+  private initialiseErrorHandling = () => {
+    this.expressApp.use(ErrorHandler);
   };
 }
