@@ -5,11 +5,11 @@ import axios from 'axios';
 import Application from './App';
 import {
   ClientToServerEvents,
-  IController,
   InterServerEvents,
   ServerToClientEvents,
   SocketData
 } from './utils/interfaces';
+import { IController } from './utils/interfaces';
 
 const controllers: IController[] = [];
 const app = new Application(5000, controllers);

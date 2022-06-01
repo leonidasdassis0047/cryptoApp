@@ -1,5 +1,3 @@
-import { Router } from 'express';
-
 // events when sending or emitting or broadcasting events from the server
 export interface ServerToClientEvents {
   //   noArg: () => void;
@@ -22,10 +20,4 @@ export interface InterServerEvents {
 export interface SocketData {
   name: string;
   age: number;
-}
-
-// controller classes
-export interface IController {
-  router: Router;
-  path: string;
 }

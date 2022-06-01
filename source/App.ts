@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import http from 'http';
-import { IController } from './utils/interfaces';
+import { IController } from './utils/interfaces/';
 
 export default class Application {
   private expressApp: express.Application;
