@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const App = () => {
+const CryptoDetails = () => {
   return (
     <View>
-      <Text>App</Text>
+      <Text>CryptoDetails</Text>
     </View>
   )
 }
 
-export default App
+export default CryptoDetails
 
 const styles = StyleSheet.create({})

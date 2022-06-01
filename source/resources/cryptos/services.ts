@@ -16,7 +16,7 @@ export const fetchCryptoAssetDetails = async (
     return data;
   } catch (error: any) {
     throw new HTTPException(
-      error?.response.status,
+      error?.response?.status,
       `Crypto with ID: '${cryptoId}' was not found`
     );
   }
