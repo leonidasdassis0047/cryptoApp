@@ -1,6 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-// to be tested better
 type Handler = (
   request: Request,
   response: Response,

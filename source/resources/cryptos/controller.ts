@@ -3,6 +3,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { AsyncHandler, HTTPException } from '../../utils';
 import { IController } from '../../utils/interfaces';
 import { ICrypto, ICryptoData } from './interfaces';
+import { fetchCryptoAssetDetails } from './services';
 
 export class CryptoController implements IController {
   public path = '/cryptos';
@@ -47,10 +48,11 @@ export class CryptoController implements IController {
 
     const { data } = await axios.get<ICryptoData>(uri);
     const cryptos = data.data;
+    const message = 'fetching all cryptos in realtime';
 
     response
       .status(200)
-      .send({ error: false, results: cryptos.length, cryptos });
+      .send({ error: false, results: cryptos.length, message, cryptos });
   };
 
   //   get single crypto information
@@ -60,19 +62,13 @@ export class CryptoController implements IController {
     next: NextFunction
   ): Promise<void> => {
     const cryptoId = request.params.cryptoId;
-    const uri = `${process.env.MESSARI_BASE_URL_V1}/assets/${cryptoId}`;
-    const { data } = await axios.get<ICrypto>(uri, {
-      headers: {
-        'x-messari-api-key': String(process.env.MESSARI_API_KEY)
-      }
-    });
+    const crypto = await fetchCryptoAssetDetails(cryptoId);
 
-    if (!data) {
-      next(new HTTPException(404, 'Asset not found'));
-      return;
-    }
+    // if (!crypto) {
+    //   next(new HTTPException(404, 'Asset not found'));
+    //   return;
+    // }
 
-    const crypto = data;
     response.status(200).send({ error: false, crypto });
   };
 }

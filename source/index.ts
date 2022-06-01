@@ -5,11 +5,11 @@ import axios from 'axios';
 import Application from './App';
 import {
   ClientToServerEvents,
+  IController,
   InterServerEvents,
   ServerToClientEvents,
   SocketData
 } from './utils/interfaces';
-import { IController } from './utils/interfaces';
 import { CryptoController } from './resources';
 
 const controllers: IController[] = [new CryptoController()];
@@ -26,6 +26,5 @@ const io = new Server<
 io.on('connection', (socket) => {
   socket.on('message', (message: string) => {
     console.log(message);
-    // io.emit('greetings', 'Welcome to sockets with postman');
   });
 });
