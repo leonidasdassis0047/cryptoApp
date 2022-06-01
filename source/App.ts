@@ -12,6 +12,7 @@ export default class Application {
     this.expressApp = express();
 
     this.initialiseAppMiddlewares();
+    this.initialiseDatabaseConnection();
   }
 
   public startListening = () => {
@@ -25,5 +26,14 @@ export default class Application {
     this.expressApp.use(helmet());
     this.expressApp.use(compression());
     this.expressApp.use(morgan('common'));
+  };
+
+  private initialiseDatabaseConnection = () => {
+    mongoose
+      .connect('mongodb://127.0.0.1:27017', { dbName: 'cryptoApp' })
+      .then(() => {
+        console.log('database connected');
+      })
+      .catch((error) => console.log(error.message));
   };
 }
