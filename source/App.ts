@@ -36,11 +36,11 @@ export default class Application {
 
   private initialiseDatabaseConnection = () => {
     mongoose
-      .connect('mongodb://127.0.0.1:27017', { dbName: 'cryptoApp' })
+      .connect('mongodb://localhost:27017', { dbName: 'cryptoApp' })
       .then(() => {
         console.log('database connected');
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error.message));
   };
 
   private initialiseControllers = () => {

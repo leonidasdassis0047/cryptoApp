@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NextFunction, Request, Response, Router } from 'express';
-import { AsyncHandler } from '../../utils';
+import { AsyncHandler, HTTPException } from '../../utils';
 import { IController } from '../../utils/interfaces';
 import { ICrypto, ICryptoData } from './interfaces';
 
@@ -34,7 +34,7 @@ export class CryptoController implements IController {
   };
 
   //   ==========================================
-  //   controllers below
+  //   crypto controllers below
   //   ==========================================
 
   //   get all cryptos in realtime.
@@ -43,15 +43,14 @@ export class CryptoController implements IController {
     response: Response,
     next: NextFunction
   ): Promise<void> => {
-    const MESSARI_API_URL =
-      'https://data.messari.io/api/v1/assets?fields=id,slug,symbol,metrics/market_data/price_usd';
+    const uri = `${process.env.MESSARI_BASE_URL_V1}/assets?fields=id,slug,symbol,metrics/market_data/price_usd`;
 
-    const { data } = await axios.get<ICryptoData>(MESSARI_API_URL);
-    data.data.map((crypto) => {
-      console.log(crypto);
-    });
+    const { data } = await axios.get<ICryptoData>(uri);
+    const cryptos = data.data;
 
-    response.status(200).send({ cryptos: data.data });
+    response
+      .status(200)
+      .send({ error: false, results: cryptos.length, cryptos });
   };
 
   //   get single crypto information
@@ -60,10 +59,20 @@ export class CryptoController implements IController {
     response: Response,
     next: NextFunction
   ): Promise<void> => {
-    try {
-      response.status(200).send('single crypto incoming');
-    } catch (error: any) {
-      next(error);
+    const cryptoId = request.params.cryptoId;
+    const uri = `${process.env.MESSARI_BASE_URL_V1}/assets/${cryptoId}`;
+    const { data } = await axios.get<ICrypto>(uri, {
+      headers: {
+        'x-messari-api-key': String(process.env.MESSARI_API_KEY)
+      }
+    });
+
+    if (!data) {
+      next(new HTTPException(404, 'Asset not found'));
+      return;
     }
+
+    const crypto = data;
+    response.status(200).send({ error: false, crypto });
   };
 }
