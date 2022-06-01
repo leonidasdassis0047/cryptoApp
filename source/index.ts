@@ -10,8 +10,9 @@ import {
   SocketData
 } from './utils/interfaces';
 import { IController } from './utils/interfaces';
+import { CryptoController } from './resources';
 
-const controllers: IController[] = [];
+const controllers: IController[] = [new CryptoController()];
 const app = new Application(5000, controllers);
 const server = app.startListening();
 
