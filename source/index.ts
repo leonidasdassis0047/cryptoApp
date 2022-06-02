@@ -11,6 +11,7 @@ import {
   SocketData
 } from './utils/interfaces';
 import { CryptoController } from './resources';
+import { fetchCryptoAssets } from './resources/cryptos/services';
 
 const controllers: IController[] = [new CryptoController()];
 const app = new Application(5000, controllers);
@@ -25,7 +26,13 @@ const io = new Server<
 
 io.on('connection', (socket) => {
   console.log(socket.id);
+
   socket.on('message', (message: string) => {
     console.log(message);
+  });
+
+  socket.on('getCryptos', async () => {
+    const cryptos = await fetchCryptoAssets();
+    socket.emit('getCryptos', cryptos);
   });
 });

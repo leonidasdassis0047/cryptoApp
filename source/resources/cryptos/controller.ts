@@ -3,7 +3,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { AsyncHandler, HTTPException } from '../../utils';
 import { IController } from '../../utils/interfaces';
 import { ICrypto, ICryptoData } from './interfaces';
-import { fetchCryptoAssetDetails } from './services';
+import { fetchCryptoAssetDetails, fetchCryptoAssets } from './services';
 
 export class CryptoController implements IController {
   public path = '/cryptos';
@@ -44,15 +44,10 @@ export class CryptoController implements IController {
     response: Response,
     next: NextFunction
   ): Promise<void> => {
-    const uri = `${process.env.MESSARI_BASE_URL_V1}/assets?fields=id,slug,symbol,metrics/market_data/price_usd`;
-
-    const { data } = await axios.get<ICryptoData>(uri);
-    const cryptos = data.data;
+    const cryptos = await fetchCryptoAssets();
     const message = 'fetching all cryptos in realtime';
 
-    response
-      .status(200)
-      .send({ error: false, results: cryptos.length, message, cryptos });
+    response.status(200).send({ error: false, message, cryptos });
   };
 
   //   get single crypto information

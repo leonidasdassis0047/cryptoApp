@@ -1,15 +1,17 @@
+import { ICrypto } from '../../resources';
+
 // events when sending or emitting or broadcasting events from the server
 export interface ServerToClientEvents {
   //   noArg: () => void;
   //   basicEmit: (a: number, b: string, c: Buffer) => void;
   //   withAck: (d: string, callback: (e: number) => void) => void;
-  cryptos: (cryptos: string[]) => void;
+  getCryptos: (cryptos: void | ICrypto[]) => void;
   greetings: (greeting: string) => void;
 }
 
 // receiving events from the client.
 export interface ClientToServerEvents {
-  crypto: () => void;
+  getCryptos: () => void;
   message: (message: string) => void;
 }
 
